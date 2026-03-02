@@ -106,3 +106,7 @@ temp/
 
 # Testing
 test-results/
+
+# Uploaded files (ignore contents but keep the folder)
+uploads/
+converted/
