@@ -1,12 +1,13 @@
 import { __dirname } from "../utils/path.utils.js";
 import { spawn } from "child_process";
 import { join } from "path";
+import fs from 'fs/promises';
 
 const env = process.env;
 
 const convertVideoUsingNvidiaCuda = (file) => {
   return [
-    '-y', // Overwrite the file if it exists
+    "-y", // Overwrite the file if it exists
     "-hwaccel",
     "cuda",
     "-hwaccel_output_format",
@@ -20,6 +21,8 @@ const convertVideoUsingNvidiaCuda = (file) => {
     join("converted", file.originalname),
   ];
   // 'ffmpeg -hwaccel cuda -hwaccel_output_format cuda -i input.mp4 -c:v h264_nvenc -preset fast output.mp4'
+
+  // No audio rencoding
   // 'ffmpeg -hwaccel cuda -hwaccel_output_format cuda -i input.mp4 -c:v h264_nvenc -c:a copy -preset fast output.mp4'
 };
 
@@ -71,7 +74,7 @@ function handleExit(code, signal) {
   }
 }
 
-export const convertVideoToMp4 = async (file, res) => {
+export const convertVideoToMp4 = (file, res) => {
   const args = convertVideoUsingNvidiaCuda(file);
 
   const ffmpegProcess = spawn("ffmpeg", args);
@@ -83,4 +86,10 @@ export const convertVideoToMp4 = async (file, res) => {
   ffmpegProcess.on("close", handleExit);
 
   return ffmpegProcess;
+};
+
+export const cleanUpConvertedFile = async (file, convertedPath) => {
+  // Cleanup files
+  await fs.rm(`uploads/${file.filename}`);
+  await fs.rm(convertedPath);
 };

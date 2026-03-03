@@ -1,6 +1,9 @@
 import { upload } from "../utils/multer.util.js";
 import express from "express";
-import { convertVideoToMp4 } from "../service/ffmpeg.service.js";
+import {
+  cleanUpConvertedFile,
+  convertVideoToMp4,
+} from "../service/ffmpeg.service.js";
 
 const router = express.Router();
 
@@ -15,14 +18,19 @@ router.post("/convertVideo", upload.single("video"), async (req, res) => {
     }
 
     const file = req.file;
-    const ffmpegProcess = await convertVideoToMp4(file, res);
+    const convertedPath = `converted/${file.originalname}`;
+
+    const ffmpegProcess = convertVideoToMp4(file, res);
 
     ffmpegProcess.on("exit", () => {
-      res.status(200).json({
-        message: "Video converted successfully.",
-        file
+      res.download(convertedPath, req.file.originalname, async (err) => {
+        if (err) {
+          console.error("Download error:", err);
+        } else {
+          console.log("📤 File sent successfully");
+        }
+        await cleanUpConvertedFile(file, convertedPath);
       });
-
     });
   } catch (error) {
     res.status(400).json({
