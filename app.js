@@ -3,7 +3,7 @@ import 'dotenv/config'
 
 
 const app = express();
-const port = 5050;
+const port = process.env.PORT || 5052;
 
 app.use(express.json());
 
@@ -18,5 +18,5 @@ app.get('/', (req, res) => {
 app.use('/ffmpeg', ffmpegRouter);
 
 app.listen(port, () => {
-    console.log("Listening on the port");
+    console.log(`Listening on port ${port}`);
 })
