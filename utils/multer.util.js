@@ -13,11 +13,11 @@ const storage = multer.diskStorage({
 
 export const upload = multer({
   storage: storage,
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith("video/")) {
+    fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith("video/") || file.mimetype.startsWith("audio/")) {
       cb(null, true);
     } else {
-      cb(new Error("Only video files are allowed!"), false);
+      cb(new Error("Only video and audio files are allowed!"), false);
     }
   },
 });

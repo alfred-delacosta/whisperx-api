@@ -2,10 +2,11 @@ import { __dirname } from "../utils/path.utils.js";
 import { spawn } from "child_process";
 import { join } from "path";
 import fs from 'fs/promises';
+import { splitFilename } from "../utils/fileExtensions.utils.js";
 
 const env = process.env;
 
-const convertVideoUsingNvidiaCuda = (file) => {
+const convertVideoToMp4UsingNvidiaCuda = (file) => {
   return [
     "-y", // Overwrite the file if it exists
     "-hwaccel",
@@ -19,6 +20,25 @@ const convertVideoUsingNvidiaCuda = (file) => {
     "-preset",
     env.FFMPEG_CUDA_PRESET,
     join("converted", file.originalname),
+  ];
+  // 'ffmpeg -hwaccel cuda -hwaccel_output_format cuda -i input.mp4 -c:v h264_nvenc -preset fast output.mp4'
+
+  // No audio rencoding
+  // 'ffmpeg -hwaccel cuda -hwaccel_output_format cuda -i input.mp4 -c:v h264_nvenc -c:a copy -preset fast output.mp4'
+};
+
+const convertVideoToMp3UsingNvidiaCuda = (file) => {
+  const fileNameSplit = splitFilename(file.originalname);
+  return [
+    "-y", // Overwrite the file if it exists
+    "-i",
+    file.path,
+    "-vn",
+    "-c:a",
+    'libmp3lame',
+    '-q:a',
+    '0',
+    join("converted", `${fileNameSplit.name}.mp3`),
   ];
   // 'ffmpeg -hwaccel cuda -hwaccel_output_format cuda -i input.mp4 -c:v h264_nvenc -preset fast output.mp4'
 
@@ -75,7 +95,21 @@ function handleExit(code, signal) {
 }
 
 export const convertVideoToMp4 = (file, res) => {
-  const args = convertVideoUsingNvidiaCuda(file);
+  const args = convertVideoToMp4UsingNvidiaCuda(file);
+
+  const ffmpegProcess = spawn("ffmpeg", args);
+
+  // Attach callback handlers
+  ffmpegProcess.stdout.on("data", handleStdout);
+  ffmpegProcess.stderr.on("data", handleStderr);
+  ffmpegProcess.on("error", handleSpawnError);
+  ffmpegProcess.on("close", handleExit);
+
+  return ffmpegProcess;
+};
+
+export const convertVideoToMp3 = (file, res) => {
+  const args = convertVideoToMp3UsingNvidiaCuda(file);
 
   const ffmpegProcess = spawn("ffmpeg", args);
 
