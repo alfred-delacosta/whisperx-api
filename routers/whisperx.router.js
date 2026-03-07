@@ -4,6 +4,7 @@ import { __dirname } from "../utils/path.utils.js";
 import path from "path";
 import { splitAudioFilename, splitFilename } from "../utils/fileExtensions.utils.js";
 import { cleanUpSubtitleFolder, transcribeWithWhisperX } from "../service/whisperx.service.js";
+import { cleanUpUploadsFolder } from "../utils/uploads.utils.js";
 
 const router = express.Router();
 
@@ -34,6 +35,7 @@ router.post("/generateSubtitles", upload.single("mp3"), async (req, res) => {
           console.log("📤 File sent successfully");
         }
         await cleanUpSubtitleFolder(subtitleFolder);
+        await cleanUpUploadsFolder();
       });
     });
   } catch (error) {
