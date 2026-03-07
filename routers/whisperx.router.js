@@ -28,13 +28,6 @@ router.post("/generateSubtitles", upload.single("mp3"), async (req, res) => {
     const whisperProcess = transcribeWithWhisperX(file, res, subtitleFolder);
     const fullSubtitleFilePath = path.join(subtitleFolder, subtitleName);
 
-    console.log(file);
-    console.log(fileNameSplit);
-    console.log(originalNameSplit);
-    console.log(subtitleFolder);
-    console.log(subtitleName);
-    console.log(fullSubtitleFilePath);
-
     whisperProcess.on("exit", () => {
       res.download(fullSubtitleFilePath, subtitleName, async (err) => {
         if (err) {
