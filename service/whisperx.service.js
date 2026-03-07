@@ -81,3 +81,8 @@ export const transcribeWithWhisperX = (file, res, subtitlePath) => {
 
   return whisperProcess;
 };
+
+export const cleanUpSubtitleFolder = async (subtitleFolder) => {
+  // Cleanup files
+  await fs.rm(subtitleFolder, { recursive: true });
+};

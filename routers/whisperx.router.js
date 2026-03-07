@@ -2,8 +2,8 @@ import { upload } from "../utils/multer.util.js";
 import express from "express";
 import { __dirname } from "../utils/path.utils.js";
 import path from "path";
-import { splitFilename } from "../utils/fileExtensions.utils.js";
-import { transcribeWithWhisperX } from "../service/whisperx.service.js";
+import { splitAudioFilename, splitFilename } from "../utils/fileExtensions.utils.js";
+import { cleanUpSubtitleFolder, transcribeWithWhisperX } from "../service/whisperx.service.js";
 
 const router = express.Router();
 
@@ -18,23 +18,22 @@ router.post("/generateSubtitles", upload.single("mp3"), async (req, res) => {
     }
 
     const file = req.file;
-    const fileNameSplit = splitFilename(file.filename);
-    const originalNameSplit = splitFilename(file.originalname);
-    console.log(originalNameSplit);
-    const subtitlePath = path.join("subtitles", originalNameSplit.name);
-    console.log(subtitlePath);
+    const fileNameSplit = splitAudioFilename(file.filename);
+    const originalNameSplit = splitAudioFilename(file.originalname);
+    const subtitleFolder = path.join("subtitles", originalNameSplit.name);
+    const subtitleName = `${fileNameSplit.name}.vtt`;
 
-    const whisperProcess = transcribeWithWhisperX(file, res, subtitlePath);
+    const whisperProcess = transcribeWithWhisperX(file, res, subtitleFolder);
+    const fullSubtitleFilePath = path.join(subtitleFolder, subtitleName);
 
     whisperProcess.on("exit", () => {
-    //   res.send({ message: "Transcribing successfully.", file });
-      res.download(subtitlePath, `${fileNameSplit.name}.vtt`, async (err) => {
+      res.download(fullSubtitleFilePath, subtitleName, async (err) => {
         if (err) {
           console.error("Download error:", err);
         } else {
           console.log("📤 File sent successfully");
         }
-        // await cleanUpConvertedFile(file, convertedPath);
+        await cleanUpSubtitleFolder(subtitleFolder);
       });
     });
   } catch (error) {
