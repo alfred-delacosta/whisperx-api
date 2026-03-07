@@ -13,19 +13,27 @@ router.get("/", (req, res) => {
 });
 
 router.post("/generateSubtitles", upload.single("mp3"), async (req, res) => {
+    console.log("In the subtitles endpoint");
   try {
     if (!req.file) {
       return res.status(400).json({ error: "No mp3 file provided" });
     }
 
     const file = req.file;
-    const fileNameSplit = splitAudioFilename(file.filename);
-    const originalNameSplit = splitAudioFilename(file.originalname);
+    const fileNameSplit = splitFilename(file.filename);
+    const originalNameSplit = splitFilename(file.originalname);
     const subtitleFolder = path.join("subtitles", originalNameSplit.name);
     const subtitleName = `${fileNameSplit.name}.vtt`;
 
     const whisperProcess = transcribeWithWhisperX(file, res, subtitleFolder);
     const fullSubtitleFilePath = path.join(subtitleFolder, subtitleName);
+
+    console.log(file);
+    console.log(fileNameSplit);
+    console.log(originalNameSplit);
+    console.log(subtitleFolder);
+    console.log(subtitleName);
+    console.log(fullSubtitleFilePath);
 
     whisperProcess.on("exit", () => {
       res.download(fullSubtitleFilePath, subtitleName, async (err) => {
