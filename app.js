@@ -10,6 +10,7 @@ app.use(express.json());
 //#region Routers
 import ffmpegRouter from './routers/ffmpeg.router.js';
 import whisperXRouter from './routers/whisperx.router.js';
+import subtitlesRouter from './routers/subtitles.router.js';
 //#endregion
 
 app.get('/', (req, res) => {
@@ -18,6 +19,7 @@ app.get('/', (req, res) => {
 
 app.use('/ffmpeg', ffmpegRouter);
 app.use('/whisperx', whisperXRouter)
+app.use('/subtitles', subtitlesRouter);
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);

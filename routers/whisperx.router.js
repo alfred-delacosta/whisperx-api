@@ -13,7 +13,6 @@ router.get("/", (req, res) => {
 });
 
 router.post("/generateSubtitles", upload.single("mp3"), async (req, res) => {
-    console.log("In the subtitles endpoint");
   try {
     if (!req.file) {
       return res.status(400).json({ error: "No mp3 file provided" });
@@ -35,7 +34,7 @@ router.post("/generateSubtitles", upload.single("mp3"), async (req, res) => {
         } else {
           console.log("📤 File sent successfully");
         }
-        await cleanUpSubtitleFolder(subtitleFolder);
+        // await cleanUpSubtitleFolder(subtitleFolder);
         await cleanUpUploadsFolder();
       });
     });
