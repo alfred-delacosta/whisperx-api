@@ -108,6 +108,11 @@ temp/
 test-results/
 
 # Uploaded files (ignore contents but keep the folder)
-uploads/
-converted/
-subtitles/
+uploads/*
+!uploads/
+
+converted/*
+!converted/
+
+subtitles/*
+!subtitles/
