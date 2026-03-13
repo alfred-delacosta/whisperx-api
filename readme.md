@@ -10,7 +10,7 @@
 
 **GPU-accelerated FFmpeg** (MP4/MP3) + **WhisperX transcription** (VTT/TXT)
 
-[📖 API Endpoints](#📖-api-endpoints) • [🚀 Installation](#🚀-installation) • [🤝 Contributing](#🤝-contributing)
+[📖 API Endpoints](#-api-endpoints) • [🚀 Installation](#-installation) • [🤝 Contributing](#-contributing)
 
 </div>
 
