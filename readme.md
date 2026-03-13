@@ -10,7 +10,7 @@
 
 **GPU-accelerated FFmpeg** (MP4/MP3) + **WhisperX transcription** (VTT/TXT)
 
-[📖 API Docs](#api-endpoints) • [🚀 Quick Start](#installation) • [🤝 Contributing](#contributing)
+[📖 API Endpoints](#📖-api-endpoints) • [🚀 Installation](#🚀-installation) • [🤝 Contributing](#🤝-contributing)
 
 </div>
 
@@ -118,12 +118,12 @@ curl http://localhost:5052/subtitles/text/myvideo
 - `converted/` 🎥: GPU-processed MP4/MP3 outputs.
 - `subtitles/` 📊: WhisperX transcription results.
 
-## 🏆 Milestones (Planned)
+## 🏆 Milestones (Completed & Planned)
 
-✅ **More FFmpeg endpoints** - Multiple conversion types (MP4, MP3)<br>
-✅ **SQLite database** - Track video/audio/subtitle metadata<br>
-✅ **Extended subtitle downloads** - SRT, VTT, TXT, JSON formats<br>
-✅ **SSE Messages for Conversion and WhisperX Progress**<br>
+✅ **More FFmpeg endpoints** - Multiple conversion types (MP4, MP3)  
+✅ **SQLite database** - Track video/audio/subtitle metadata  
+✅ **Extended subtitle downloads** - SRT, VTT, TXT, JSON formats  
+✅ **SSE Messages** - Real-time progress for conversion & transcription  
 
 **Join the journey!** 🌟
 
