@@ -42,8 +42,8 @@ export const transcribeWithWhisperX = (file, res, subtitlePath) => {
   const whisperArgs = [
     "--compute_type",
     "float32",
-    "--language",
-    "en",
+    // "--language",
+    // "en",
     "--highlight_words",
     "True",
     "--device",
