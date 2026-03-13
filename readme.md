@@ -149,8 +149,6 @@ This project is licensed under the ISC License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-_Made with ❤️ and a dash of AI magic._
-
 ⭐ **Star this repo if you find it useful!**
 
 </div>
