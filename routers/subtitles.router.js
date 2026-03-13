@@ -7,7 +7,7 @@ import {
   convertVideoToMp3,
   convertVideoToMp4,
 } from "../service/ffmpeg.service.js";
-import { generalSplitFileName, splitFilename } from "../utils/fileExtensions.utils.js";
+import { generalSplitFileName, getNameWithOutExtension, splitFilename } from "../utils/fileExtensions.utils.js";
 import { __dirname } from "../utils/path.utils.js";
 
 const router = express.Router();
@@ -15,13 +15,14 @@ const router = express.Router();
 router.get("/text/:videoName", async (req, res) => {
   try {
     const videoName = req.params.videoName;
-    const directory = await fs.readdir(path.join('subtitles', videoName));
+    const nameWithoutExtension = getNameWithOutExtension(videoName);
+    const directory = await fs.readdir(path.join('subtitles', nameWithoutExtension));
 
     for (const file of directory) {
         const fileNameSplit = generalSplitFileName(file);
 
         if (fileNameSplit.ext == 'txt') {
-            const fileContents = await fs.readFile(path.join('subtitles', videoName, file), 'utf8');
+            const fileContents = await fs.readFile(path.join('subtitles', nameWithoutExtension, file), 'utf8');
             res.json({ subtitles: fileContents });
             break;
         }
