@@ -3,6 +3,7 @@ import { spawn } from "child_process";
 import path from "path";
 import fs from "fs/promises";
 import { splitFilename } from "../utils/fileExtensions.utils.js";
+import 'dotenv/config'
 
 /**
  * WhisperX-specific stdout/stderr handlers
@@ -44,6 +45,8 @@ export const transcribeWithWhisperX = (file, res, subtitlePath) => {
     "float32",
     // "--language",
     // "en",
+    "--model",
+    process.env.WHISPER_X_MODEL || "base",
     "--highlight_words",
     "True",
     "--device",
