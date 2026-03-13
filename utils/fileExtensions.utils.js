@@ -1,3 +1,5 @@
+import path from 'path';
+
 export const videoFileExtensions = [
   "mp4",
   "avi",
@@ -206,3 +208,36 @@ export const generalSplitFileName = (filename) => {
 
   return { name, ext };
 };
+
+/**
+ * Extracts the filename without its extension from a multer file object's originalname.
+ * Does not mutate the input file object.
+ * @param {Object} file - The multer file object (e.g., from req.file).
+ * @returns {string} The filename without the extension.
+ */
+export function getOriginalFilenameWithoutExtension(file) {
+    // Use path.parse to safely extract the name without the extension
+    return path.parse(file.originalname).name;
+}
+
+/**
+ * Extracts the filename without its extension from a multer file object's filename.
+ * Does not mutate the input file object.
+ * @param {Object} file - The multer file object (e.g., from req.file).
+ * @returns {string} The filename without the extension.
+ */
+export function getUploadFilenameWithoutExtension(file) {
+    // Use path.parse to safely extract the name without the extension
+    return path.parse(file.filename).name;
+}
+
+/**
+ * Extracts the filename without its extension from a filename.
+ * Does not mutate the fileName string.
+ * @param {Object} fileName - The name of a file.
+ * @returns {string} The filename without the extension.
+ */
+export function getNameWithOutExtension(fileName) {
+    // Use path.parse to safely extract the name without the extension
+    return path.parse(fileName).name;
+}

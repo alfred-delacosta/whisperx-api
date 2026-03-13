@@ -2,7 +2,7 @@ import { upload } from "../utils/multer.util.js";
 import express from "express";
 import { __dirname } from "../utils/path.utils.js";
 import path from "path";
-import { splitAudioFilename, splitFilename } from "../utils/fileExtensions.utils.js";
+import { getOriginalFilenameWithoutExtension, getUploadFilenameWithoutExtension, splitAudioFilename, splitFilename } from "../utils/fileExtensions.utils.js";
 import { cleanUpSubtitleFolder, transcribeWithWhisperX } from "../service/whisperx.service.js";
 import { cleanUpUploadsFolder } from "../utils/uploads.utils.js";
 
@@ -19,16 +19,19 @@ router.post("/generateSubtitles", upload.single("mp3"), async (req, res) => {
     }
 
     const file = req.file;
-    const fileNameSplit = splitFilename(file.filename);
-    const originalNameSplit = splitFilename(file.originalname);
-    const subtitleFolder = path.join("subtitles", originalNameSplit.name);
-    const subtitleName = `${fileNameSplit.name}.vtt`;
+    // 21598-KanekoaTheGreat-1813625661891948545-20240717
+    const uploadFileNameWithoutExtension = getUploadFilenameWithoutExtension(file);
+    const originalNameWithoutExtension = getOriginalFilenameWithoutExtension(file);
+    const subtitleFolder = path.join("subtitles", originalNameWithoutExtension);
+    const subtitleFileName = `${uploadFileNameWithoutExtension}.vtt`;
+    const subtitleOriginalName = `${originalNameWithoutExtension}.vtt`;
+    //"a54ba260-f541-4f1c-b369-f83037604e78.vtt"
 
     const whisperProcess = transcribeWithWhisperX(file, res, subtitleFolder);
-    const fullSubtitleFilePath = path.join(subtitleFolder, subtitleName);
+    const fullSubtitleFilePath = path.join(subtitleFolder, subtitleFileName);
 
     whisperProcess.on("exit", () => {
-      res.download(fullSubtitleFilePath, subtitleName, async (err) => {
+      res.download(fullSubtitleFilePath, subtitleOriginalName, async (err) => {
         if (err) {
           console.error("Download error:", err);
         } else {
