@@ -120,10 +120,10 @@ curl http://localhost:5052/subtitles/text/myvideo
 
 ## 🏆 Milestones (Planned)
 
-✅ **More FFmpeg endpoints** - Multiple conversion types (MP4, MP3)
-✅ **SQLite database** - Track video/audio/subtitle metadata  
-✅ **Extended subtitle downloads** - SRT, VTT, TXT, JSON formats
-✅ **SSE Messages for Conversion and WhisperX Progress**
+✅ **More FFmpeg endpoints** - Multiple conversion types (MP4, MP3)<br>
+✅ **SQLite database** - Track video/audio/subtitle metadata<br>
+✅ **Extended subtitle downloads** - SRT, VTT, TXT, JSON formats<br>
+✅ **SSE Messages for Conversion and WhisperX Progress**<br>
 
 **Join the journey!** 🌟
 
