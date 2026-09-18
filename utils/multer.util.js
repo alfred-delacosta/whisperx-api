@@ -7,7 +7,7 @@ const storage = multer.diskStorage({
     cb(null, "uploads");
   },
   filename: (req, file, cb) => {
-    cb(null, crypto.randomUUID() + path.extname(file.originalname));
+    cb(null, crypto.randomBytes(6).toString("hex") + path.extname(file.originalname));
   },
 });
 
