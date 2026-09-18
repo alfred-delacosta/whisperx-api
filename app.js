@@ -1,5 +1,6 @@
 import express from 'express';
 import 'dotenv/config'
+import './utils/database.js';
 
 const THIRTY_MINUTES = 30 * 60 * 1000;
 

@@ -1,13 +1,13 @@
 import multer from "multer";
-import crypto from "crypto";
 import path from "path";
+import { generateShortId } from "./id.utils.js";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads");
   },
   filename: (req, file, cb) => {
-    cb(null, crypto.randomBytes(6).toString("hex") + path.extname(file.originalname));
+    cb(null, generateShortId() + path.extname(file.originalname));
   },
 });
 
