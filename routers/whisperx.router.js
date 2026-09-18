@@ -1,10 +1,12 @@
 import { upload } from "../utils/multer.util.js";
 import express from "express";
-import { __dirname } from "../utils/path.utils.js";
 import path from "path";
-import { getOriginalFilenameWithoutExtension, getUploadFilenameWithoutExtension, splitAudioFilename, splitFilename } from "../utils/fileExtensions.utils.js";
-import { cleanUpSubtitleFolder, transcribeWithWhisperX } from "../service/whisperx.service.js";
+import fs from "fs/promises";
+import { getOriginalFilenameWithoutExtension } from "../utils/fileExtensions.utils.js";
+import { generateShortId } from "../utils/id.utils.js";
+import { transcribeWithWhisperX } from "../service/whisperx.service.js";
 import { cleanUpUploadsFolder } from "../utils/uploads.utils.js";
+import { insertTranscription } from "../utils/database.js";
 
 const router = express.Router();
 
@@ -19,14 +21,21 @@ router.post("/generateSubtitles", upload.single("mp3"), async (req, res) => {
     }
 
     const file = req.file;
-    // 21598-KanekoaTheGreat-1813625661891948545-20240717
-    const uploadFileNameWithoutExtension = getUploadFilenameWithoutExtension(file);
     const originalNameWithoutExtension = getOriginalFilenameWithoutExtension(file);
-    const subtitleFolder = path.join("subtitles", originalNameWithoutExtension);
-    const subtitleFileName = `${uploadFileNameWithoutExtension}.vtt`;
+    const originalFull = file.originalname;
+    const generatedId = generateShortId();
+    const ext = path.extname(file.filename);
+    const newFilename = `${generatedId}${ext}`;
+    const oldPath = file.path;
+    const newPath = path.join("uploads", newFilename);
+    await fs.rename(oldPath, newPath);
+    file.filename = newFilename;
+    file.path = newPath;
+    const subtitleFolder = path.join("subtitles", generatedId);
+    const subtitleFileName = `${generatedId}.vtt`;
     const subtitleOriginalName = `${originalNameWithoutExtension}.vtt`;
-    //"a54ba260-f541-4f1c-b369-f83037604e78.vtt"
-
+    insertTranscription(originalFull, generatedId);
+    await fs.mkdir(subtitleFolder, { recursive: true });
     const whisperProcess = transcribeWithWhisperX(file, res, subtitleFolder);
     const fullSubtitleFilePath = path.join(subtitleFolder, subtitleFileName);
 
@@ -37,7 +46,6 @@ router.post("/generateSubtitles", upload.single("mp3"), async (req, res) => {
         } else {
           console.log("📤 File sent successfully");
         }
-        // await cleanUpSubtitleFolder(subtitleFolder);
         await cleanUpUploadsFolder();
       });
     });
